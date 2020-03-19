@@ -21,6 +21,7 @@ print(employeeTwo.numberOfWorkingHours)
 ## we can access the class variable with this
 ## and when we create an object
 ## all the object will have ths attribute
+## a class attribute have the common data for all the instance of the class
 
 
 
