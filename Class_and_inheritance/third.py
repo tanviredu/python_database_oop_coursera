@@ -40,3 +40,12 @@ print(employeeOne.name)
 
 employeeTwo.name = "ornob"
 print(employeeTwo.name)
+
+
+
+
+
+## when you try to print the attribute
+## it will first look for the instance attribute
+## then the class attribute 
+## and if not found in there then it throw an error
