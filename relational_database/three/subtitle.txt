@@ -1,0 +1,177 @@
+So now we're going to get
+to the heart of the matter, we're going to actually write some SQL
+and we're going to make a database. Okay, you hopefully by now, I've told you a couple of times, installed
+the SQLite browser. If you haven't, do it. You could also write a Firefox plug-in that can be used to manipulate
+SQLite databases. I used this before SQLite browser
+came out with their newest version. So, everything I'm going to do
+could be used by either one. And there might even be
+a way to do it with an SQLite admin tool if you downloaded
+like a MAMP or an XAMPP. So it doesn't matter. You just need some piece of software
+that gives you a place to type SQL, You hit a go button, and it sends it
+to the database and comes back. That's all you need. Okay. This is what it looks like,
+SQLite, SQLite browser. So let me go ahead and start
+this thing up. SQLite browser, and there we are. Database Browser for SQLite. And what it basically does is this
+is going to read and write a file. And that file that it's going to read and
+write is in a very specialized format that's highly optimized for
+rapid retrieval and rapid storage of data. And so we'll start by saying New Database and I'm going to pick a place on the disk. I will put it in the desktop and
+python for everybody, databases and I'll call it sql1. That'll just be the name of the database. Now, it's writing to a file. This file is not something you should read
+using anything other than a SQLite library. It's a funky looking file. So
+we're going to save it, boop. And it's asking us if we
+want to create a table. I'll just hide that thing. So we have no tables, no indexes,
+no views, no triggers, no nothing. And we have a place that
+we can execute SQL. So when I said you're
+a database administrator, we got a file back there called sql1 that
+everything we do is actually reading and writing to that file, but we don't
+write code to touch that file directly. We always are using the SQLite library,
+okay? So we're up, let's create a table. Now this is our first SQL. And so CREATE TABLE and
+then the name of the table, Users. I'm just going to use upper case. Upper lower case generally matters. There are a few weird situations
+where it doesn't matter, so just pretend that case
+matters in this situation. And it teaches you something
+right away about SQL. SQL is designed to be
+somewhat conversational. And so the keyword, CREATE TABLE, is kind of like one keyword,
+we're creating a table. Then the name of the thing and then
+a parenthesized list of the fields and then the types of the field,
+that's what we're dealing with. So this is CREATE TABLE named Users, and
+we're going to put two columns into it, and one is of variable length
+character, up to 128 characters, an email that's also a variable
+length character up to 128 characters. So, this is sort of our schema,
+this is our contract. We're saying these are the only two
+things we're putting in this table. We can't put a thing
+called age in the table, we can't put a thing called
+favorite beverage in the table and we can't put 129 characters
+in the name column. We can put 0 or 1 or 2 or 127 or 128, that's just fine, but we can't put 129. This is a contract. And the database, if we want to put longer
+characters in, we just say no, no, no, no. We want to put 1024 in and then the contract
+will be we could put up to 1024 and if we put 1025, the database would
+be mad. And like why do you do this? Why is it, why is the database so
+obsessed about this? And the answer is, as it lays
+the data out on this disk drive and it wants to get to it fast, it really is helpful to know the size,
+the maximum size. Because if you say this is only going
+to be four, versus four megabytes, it might lay the table out
+differently on the disk. You don't need to know that. You just need to be explicit
+about the contract. Okay? So this is part of making the
+data model. Figuring out in advance the kind
+of data that you're going to use, how you're going to use that data,
+and then you communicate that to SQL. And then you don't worry about all
+the magic that makes that super fast. So this is the contract that you make so that your data is really fast. By
+being very explicit about your data, you get in return the database does
+a lot for you and does it really fast. So now I'm going to go into
+my little SQL window and I've pasted in that
+CREATE TABLE statement. And different user interfaces
+will have different things, but they all kind of have a window. And you all put some database stuff in
+them, and you hit this execute button. It's a this little play button in this one,
+might be something else in yours, but at some point you go, do it! And down here it says query executed
+successfully, CREATE TABLE, yadda, yadda, yadda. So now if we take a look at the data,
+we see that we have one table and the table is named Users and
+there's name and email. If we pull this over we'll
+see that the VARCHAR is 128, so the database knows the contract
+that we just gave it, okay? So that's your first SQL command. Your next SQL command is, and you probably should just copy and paste this
+stuff off the slides, it's what I'm doing. So there's your table,
+we're going to put some data into it. So let's go ahead and do that. And we can put a new record in there. We can say Chuck csev@umich.edu. We can say another New Record. We can say Colleen. We'll call her vlt@umich.edu. I want it so they sort right, edu. Another record, we'll make this be Sally, sally@umich.edu. And then we'll have another
+one we'll call like Fred. I don't know, Fred. fred@umich.edu. Now it turns out that everything we're
+doing is actually running SQL, and I want to finish that. And if you take a look
+here at the SQL log, you can see all the SQL
+that's going on right here. This INSERT, but let's kind of
+leave that alone for now, we'll just kind of hide that. But that's what's going on right now. And so we made a table and
+it now has four rows in it. And now we're going to do some SQL to We've done the create and now we're going
+to do some inserting and deleting and retrieving of the data. So the first thing we're going to
+do is insert another record. Now, what we were just doing in that
+user interface was exactly this. Here is another example of
+some SQL where INSERT INTO is kind of like a single keyword. The name of the table,
+a parenthesized list of the columns and then the word VALUES,
+that's just part of SQL, and then a parenthesized list of
+the corresponding values. So Kristin is the name and
+kf@umich.edu is the email address. And so that is a SQL statement that
+inserts a new record into our Users table. So we'll just cheat and grab this, copy it, then go to the SQLite browser and
+we'll go to Execute SQL. And I will get rid of the CREATE TABLE
+because we already did that, and just type in insert users
+with that parentheses. It's doing syntax coloring for
+me which makes it very, very helpful. And then I got the right SQL. Now let's just say I make a mistake. Let's just say I call this
+ZAP instead of VALUES. I will run this and it will go
+like zap is a syntax error and so it does talk to you and then you can
+go fix that and say VALUES. And it's actually helping
+me and I can run that. And then it says, success. And I go back and
+look at my data structure. I can browse the data, and
+there's Kristin, right? So the INSERT added another row. Pretty simple stuff, isn't it? Okay, so there we go with that. We inserted another row
+with Kristin in it. Now we could delete a row. And so we say DELETE FROM,
+which is again kind of like a keyword. DELETE, it could be DELETE Users, but it's sort of like, we're not actually
+deleting all the users. We're deleting something from the Users. And so they add this keyword in
+SQL that's kind of redundant. It's not necessary, but it lets us
+read it a little. DELETE FROM Users. Well that sounds like words. Sounds nice. DELETE FROM Users,
+the name of the table, and then a WHERE clause. And you can put WHERE clauses on
+lots of different SQL statements. And that says, don't delete all the rows,
+only delete where this is true. And in this case we put
+a logical question. So this is like a question mark
+in a if statement, right? DELETE FROM Users WHERE
+email equals ted@umich.edu. This could be one row or there could be a hundred rows
+that all have that email address. That would actually be bad to have a
+hundred rows that have that email address if that were a key, but whatever. So this just says DELETE FROM Users
+WHERE email equals ted@umich.edu. So let's do that. Again, I just copy this, copy. Go back to my SQLite browser. I could use the Delete Record button, but I'm trying to teach you
+this SQL language now. So this is the way to do it. DELETE FROM Users WHERE
+email equals ted@umich.edu. I hit the play button. And it says executed successfully. And I go back, and I look at the data. And, was there no Ted in there? I'd better delete a different one,
+let's call Fred. Let's call it fred@umich.edu. So now if we do the Browse Data,
+Fred's gone, so the delete works. That's why I do cutting and
+pasting on this. So that's a delete. Update allows us to sort of reach in
+to a particular cell or set of cells in a table, many rows or many columns or
+many row / column combinations. And we just say UPDATE, which is
+the SQL keyword, the table name, SET, which is an SQL keyword, and then
+the column name and then the new value. The WHERE clause is important
+because without the WHERE clause, it would do it for all of the rows,
+so the WHERE clause reduces the rows. So we have a WHERE clause here that
+says WHERE email='csev@umich.edu'. So what we're really saying is go find
+the rows that have that true and change the column name to be Charles. Okay?
+The column name to be Charles. So let’s do that one. And hopefully at this point you
+are sort of following along and you're doing your own data because that
+will be one of your assignments is to make a database and turn it in. So, I will say execute. Oop. and I take a look at Browse Data and
+you see that Charles is now changed. So far so good. You see why I really like this
+language. I mean, it makes so much more sense than Python,
+but don't criticize Python. Don't be hating on Python! Python is powerful and flexible. This is powerful, but not so flexible. So we did a insert. We did a delete. We did an update. Now we have to do the read. The R part of CRUD. And so that is SELECT. And SELECT takes a list of columns,
+that's a column list. And star means all columns. FROM is a keyword and
+then Users is the name of the database. And you can have either with or
+without a WHERE clause. And so this says select. That really says all rows all columns
+from the database named Users. SELECT * FROM Users. Okay? And this says this will turn out to
+be one row in our little database, but it might be more than
+one if this was true. If this WHERE clause was true for
+more than one, okay? So, let's run those commands. Now, it turns out that we're kind of
+implicitly running those commands, the SELECT * FROM Users,
+every time I hit that browse button. Whoops, don't do that. So if I go over here and when
+I do browse, I couldn actually see that in SQL log,
+the last thing was that. Okay? And so it's doing a select on our behalf,
+but we're learning how to do SQL so we don't want to, we want to
+do it the hard way. So we say SELECT * FROM Users. Hit that, and
+now down here we see that and we also see in this log as the log
+goes by, that it sent that stuff. Now it´s also sending more stuff. We´ll get rid of the log,
+it´s too complex. But it´s really just SQL. I´m giving you the simple stuff at the
+beginning, okay? So that was a select and I can add a WHERE clause,
+WHERE email equals csev@umich.edu. Let's see if I typed that right. And that should show us all the rows,
+but only show the ones for which that's true. So that's a WHERE clause, And a SELECT. You can also throw another
+clause on the end of a SELECT. You can have an ORDER BY. So in this case I'm going to SELECT * FROM
+Users, which is exactly what I did before. Select all the columns
+from the table Users, ORDER BY, again a two-word keyword that
+rolls off the tongue more naturally. email, which is a column. Sorting is one of the things that
+databases do really, really well. And that's because it actually sometimes
+for sorting it has these things. And it has these little tricks that say oh that one
+goes here and this one's the next one. And so if you really want it in
+sorted order, have a really quick way
+to figure that stuff out. But that magic, you don't worry about. That's the database's problem. So you just say hey, smart database
+from billion-dollar company, I would like to order this by email. I don't know how to do that, I don't
+even know how to write a sort algorithm. I just know that I want it ordered
+by email. Now do it, database. And there you go and you see these things
+ordered by email and if I want to change it to be order
+by name, it's order by name, okay? So name this time, email that time. Turns out sometimes you can
+just click on this header. But we're learning the tough way. Which is actually not all that tough. So you can select and you can order them,
+you can have a WHERE clause and ultimately, this is the summary
+of what I've taught you so far. An INSERT INTO a table
+with a columns VALUES, a DELETE FROM Users WHERE, and
+a true / false with UPDATE Users SET, SELECT * FROM Users, or
+SELECT * with an ORDER BY. So at this point, you'd be like, wow,
+I needed to go to college to learn this? It's like so easy [LAUGH]. It is easy. That's why I don't teach
+you SQL until later, so you learn the hard stuff, so you're tough. Now I can show you the easy stuff. Now, of course there's
+some complexity to come. But at the end of the day when we're
+talking about a single table and the statements that are one table, it looks like a really big
+fast smart spreadsheet. And that's why some of you may
+recognize what you're learning here. You may say, you know what,
+I've actually been doing this! And I didn't realize how smart I was! I didn't realize I was doing databases. But we're still just at the basics. The power comes with what we're going to talk
+about next and that's when we have more than one table and we start modeling
+data at the connections between things. And that's when we really start to show
+how you can make things really fast. When we exploit the relationships
+between tables. So that's what's up next.

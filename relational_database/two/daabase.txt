@@ -1,0 +1,162 @@
+So now we want to talk about
+how we place the database and the database software in
+relative to the other aspects of the programming environment
+that we're going to build. And we're going to talk both about
+large projects and small projects. And a large project would
+use sort of a web site. Like, you know maybe you build a web site to
+track comic books or something, and you store all the data in the database. And so, in a large project, and we're
+not going to do it in this, so much in this class, but I figured it's time now that
+we're learning about databases to sort of give you a sense of how they're
+used in these online systems. And maybe in a future course
+you'll see how they're used, and learn how to do
+this in large projects. But there are generally sort of two roles. One is the person who
+writes the application and produces the user interface for
+the application, and for the web site. And then there's the other that actually
+sort of monitors and adjusts the database, and that person is
+the database administrator. Often in a large project, you will get some advice as an application
+developer from a database administrator. And the idea is is that
+database tuning and monitoring is a somewhat specialized job. And so in a professional environment, like the open source learning management
+system that I work on named Sakai, in production I don't get as
+a developer, and so that's who I am. This is me, I'm a developer. I write cool code, I make really
+neat widgets for the end user, and this is the end user in a web browser,
+talking to my cool thing, and I add a little button and
+stuff like that. And I write code that actually talks
+to the database, the database server, which is both code plus
+the data storage itself. And I write code that talks SQL to the
+database server and gets data back, and then formats it for the end user,
+and that's what developers do. They're the ones that create
+application software. The database administrator, generally
+we don't let the developer talk to the production database directly, because
+we're afraid the developer will break it. And that's probably because there's
+been a lot of experience where developers broke it. So, we have a special person
+called the database administrator. And they're the ones that
+are allowed to talk to the database. Now, because the database is both storage and software, it can take SQL
+queries from many different sources. Both the application, or database tools. And so the database administrator has like
+a direct way to talk to the database and get data back. And so if something's going wrong, like a,
+it's gotten really large, what's going on? So the database administrator will start
+running commands straight to the database. Whereas the developer generally
+has no access to the real database, Eventually we can write a new version
+of the application software. And so that's kind of the split between
+the roles between developer and database administrator in large projects. And the database administrator helps
+with the design and implementation. And often a database
+administrator is shared across a number of software projects. But that's not exactly what
+we're going to do, right? So it'd be nice, and maybe you have a job. Maybe you do have a job that there's
+a database administrator, and it'll kind of look like that. But right now, during this class,
+we've met the database administrator and the application
+developer and they're both you. Okay?
+They're both you. Or me. Right? And so what's going to happen now
+is you get to do both roles. And later, if you have somebody
+to help you with it, you might turn more into
+the developer side, or more into the database administrator
+side, that's perfectly fine. So we still have a database system, right? And that's got both the logic, the
+software that makes the database smart, and the data itself, and we talk to it. And the program we're going
+to use initially right now, is we're going to study
+the DBA way of doing business. You're going to write SQL, you're going
+to talk to this little piece of software that's going to submit stuff directly. And so, you are going to act
+as a database administrator. We're going to create tables,
+put data in them and we're just going to type stuff into
+this application called SQLite browser. There are others of these applications
+that are like database administrator applications. Much later, much later we are going
+to start writing Python programs. And in those programs we're going to talk
+to the same database files using SQL. And we're not going to write
+programs that have a web interface. That would be like Twitter or
+Comicbookregistry.com or whatever. We're going to have various
+sources of inputs. Sometimes files, sometimes network, and we're going to write programs
+that read this stuff. And clean it up. Often there's a cleaning step. And then we are going to write
+the data into a database. And so we're going to grow this data,
+fill it up, and then we'll sort of be done with this phase of acquiring data, and all
+our data will be sitting in a database. Then we will write another Python
+program to read this data and maybe make a pretty file. And even later in the class,
+we will be visualizing that or sending it to various other places. You might send it to R to
+do statistical analysis, or Excel to do some simple analysis or
+visualization, or we'll use JavaScript to make pretty
+pictures and spinning things and whatever. So, the basic pattern
+here is it's the same. We're going to have sort of apps and
+then we're going to have DBA. But they're both you. So the thing we're going to
+focus on first is right here. The database we're going to use is a thing
+called SQLite, and the software we're going to use is what I told you to install
+right at the beginning, a while ago. Hopefully you've done that, SQLite browser,
+because otherwise you can't talk to the database, unless you
+have something equivalent to this. And they do exist. But the basic pattern is,
+read data, clean it up, stick it in the database in a sensible and
+organized way. And then write other applications to
+make sense of it and analyze the data. And that's what we're
+going to be doing coming up. So, when we build this data,
+I mentioned the word schema, right? That we come up with a contract for exactly the way the data
+is supposed to look. And with this contract, the database software can make
+the best use of itself, right? It can make good use of the disk drive. It can make good use of
+all these other things. And so, we call this the database model. And it's best thought of as a contract. Okay, we're going to talk into this file. There's going to be magic things
+that are stored in here. We use this database software. And the schema is our way to inform the database how we think this,
+how we're going to use the data and let the database figure out the way
+to play it, where to put it. I'll put this thing over here,
+I'll put another thing over here, and I'll put a little shortcut over here. We don't care about that. We say this is the data model we're going
+to work with, and you the database code are supposed to be really smart and figure
+out how to make the most sense of that. So the data model is not just the SQL
+to query it, but the data model is our contract about the shape of what we're
+going to store and retrieve in our database. So there's a number of common database
+systems, I've mentioned several of them. Oracle is awesome. It's a company that was effectively
+created just to make a database system. And they were founded at the birth
+of the relational movement, and won because they were very good at it. The others who didn't win were
+like IBM, and others, although they all had relational
+databases as well. A lot of those other vendors who let, well I don't think
+letting Oracle win is the right word. Those vendors that Oracle out-competed were the ones that
+didn't embrace this relational stuff. Because I was in college when they
+saw what was coming down and some of us were like, ah,
+relational, too much math. Give me the quick, dirty stuff, right? And it took a while for
+the relational model really to win, but when it won, it won big time. And Oracle was a company that
+made a bet on it winning. And so by the time we all realized,
+whoa, it's a good idea, because we all thought it was a bad idea,
+or at least I did, it was too late. Oracle had the best implementation
+of the good idea that we all finally realized was a good idea. And so, Oracle kind of wins. So then what happens is Oracle's kind
+of the old dog in the marketplace, the very expensive, commercial, a lot
+of people think it's simply the best. But there's alternatives
+that are quite nice. There's MySql, which is a open source. MySql has been purchased by Oracle,
+but continues to be open source. If you really want to be open source,
+there's a MySql MariaDB. MariaDB, it's called. It starts with an M on purpose so that it starts with
+the same letter as that. So MariaDB is a copy of the open
+source version of MySql which was made at the moment
+that MySql was purchased by But MySql remains open source so
+a lot of people who use MySql are switching to Maria, but
+a lot of people just keep using MySql. And if Oracle does something bad with
+MySql, we'll all switch to Maria and that'll be the end of that. So at that point, Oracle hasn't done
+anything really bad with MySql, and so it's okay. So we tend to use MySql for online
+web sites, a lot of web site stuff. Oracle tends to be used for
+enterprise kinds of things. And then another one that's very popular
+is SqlServer, it's the Microsoft one. You may have even used
+Microsoft Access and you might have even done like a screen,
+where you're dropping things down that turn out to be SQL under the
+covers, don't know. SqlServer for
+Microsoft is a very good product. Some enterprise organizations are all
+Microsoft and so they use SqlServer. Don't feel bad, pretty much
+everything I'm going to talk about applies equally to SQL because
+SQL's a standard and that's nice. There's another one called
+Postgres that's also open source that's very nice and it's kind of
+more of an imitation of Oracle than MySql. MySql is designed to be simpler and
+faster and solve less problems than Oracle,
+but do them super fast. And that's why it's often
+very popular in web sites. Postgres is sort of
+more of a rich database that's very much a direct
+competitor of Oracle. MySql is its kind of own world. And we're not going to use any of these. If you go take sort of a web class,
+you will probably use MySql and everything I'm going to teach you
+in this class is useful there. Okay? All the knowledge, all the SQL. But we're going to use a thing
+called SQLite. Lite meaning little, tiny, not very heavy. And so, SQLite is what's
+called an embedded database. And MySql or Oracle are whole
+pieces of separate software that we sort of talk across
+a network connection to. But SQLite is actually part of software,
+and so it's built in. Your car, if it's a reasonably modern car, probably has five copies of SQLite
+in it, right? So your car has SQLite. If you have a fancy music player in
+your car, it probably is using it. If you have an iPhone, it probably
+has 30 copies of SQLite in it, because SQLite is designed to be really small,
+so small that you actually don't have to separate it, you just build
+it into the application, and the thing that matters most to us
+is that it's built into Python. It's already there in Python. So that's super awesome, right? And it's fast and
+aimed at smaller amounts of data, but because in Python we're doing data
+analysis, we will make good use of SQLite. And the fact that it's built in
+just makes our life really simple. We don't have to install
+a bunch of software. Python has it with nothing
+more than an import statement. You know how this story goes. If you're in Python and
+you've got to get something done, the first thing you do is figure
+out what import statement you need. Okay? So that gives us a sense the of the SQL
+applications that we'll be using. Up next we're really going to
+start writing some SQL. Make a database and put some tables in it,
+and put some data in those tables.

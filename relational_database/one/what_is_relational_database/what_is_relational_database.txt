@@ -1,0 +1,177 @@
+So now we're going to move
+into talking about databases. And it may seem a little strange to be
+talking about databases in a programming language, but we are using this
+programming language for doing data analysis. And so it turns out that it's quite often
+necessary when you're pulling data, especially data you're pulling over a
+network, where you might be rate limited, or you want to store the data in a database. You have a process that reads the data and
+puts it in a database, and then you can analyse it
+out of the database. And it makes some of your
+processes go really fast. It allows you to change your analysis, and not lock your analysis into
+the retrieval of the information. So it speeds up your overall workflow,
+but you have to learn a bunch of stuff so that you can put the information
+into your database. Now, the first task that you have is
+to install your database browser. There's a couple of different ways
+to read and write these files. We're going to use Python to read and
+write the files, but we want a way to read and
+write the files directly. And so this is code that you can download
+for the Mac, for Windows, for Linux. There's also a Chrome plugin
+that you can get for SQLite, that you could do everything
+that we're doing in the class. And so I don't really care how you achieve
+the things you're going to achieve in the class, because we're going to grade you,
+not so much about what, how you use things. But instead, we're going to look at, you know,
+the databases that you produce, okay? So stop now, download this, install it. It should be simple, should be easy. Check with the forums if
+you have some problems. So relational databases are a whole
+subfield of computer science. And it might be best to talk about what
+life was like before relational databases, and you use relational databases thousands
+of times a day without even knowing it. If you imagine something like
+a learning management system, where there's hundreds of thousands of
+users, and terabytes or petabytes of data, and you log in, and within a half a second
+it shows you what you're supposed to see. You can't read a petabyte of data in a
+half a second, you just can't. And in the early days,
+we used to have data that was small and computers that didn't have
+a lot of storage in them. So we tended to use tapes and we would put the data like on a magnetic
+tape, and we would sort the data. We would have old bank balances on one
+tape, we would have the transactions, and then we would read one balance, check
+to see if that transaction had changed, then we would store the balance. And you would have like last night's bank
+balances, and tonight's bank balances. And then the next day,
+you would put this over here, and read the old bank balances and
+make changes. And this is how, day after day, in the 60s
+and the 70s, we would update data. If you look at old computer videos,
+you'll see these little spinning things. Well those are tape drives, and that's where most of the real
+data was stored, and it was. But as computers got faster,
+as they got more memory, and as we started to store data more
+in the memory of computers and on the disk drives a whole 
+different way, so you didn't have to read to get through the
+account where it starts with the letter s. You didn't have to read through all
+the data from a through s just to get to my account that starts with s. And you'd be like oh, wait a second. We have a disk drive that we can skip all
+the way and skip back and skip over here. And so the problem became how to make
+sure of this random access medium in which we can store data in a way
+that's efficient and fast and clever. So just because you could randomly
+access the data didn't mean it was fast. You still had all the data to look at and
+if you just looked at it sequentially, so relational databases were
+this applying cleverness to how we would use random access data
+storage, mostly disk drives that spun. And it really sort of
+emerged in the 60s and the 70s, and whole companies were
+formed like Oracle. Oracle exists because smart
+people figured this problem out before other smart people did. And so they got to form a company and Oracle's the leading database vendor
+on the planet and much of its revenue comes from its database product and
+things built on top of its database. But literally before 1960, the concept
+of database really wasn't an idea. It was something that happened as storage
+and what we wanted to do with computers. So this is where, if you had to really
+read a tape to log in to a computer it might take four hours to log in. Which would be unacceptable
+in this modern day and age. As I mentioned, the database is sort
+of this technology that emerged and it emerged from a lot of
+theoretical analysis and the underlying foundations of database have to
+do with some really powerful mathematics. And so there's powerful mathematics and
+it still is present in some of the terminology that some
+people use to describe databases. And so there's really kind of two parallel
+terminologies that you will encounter. You'll pick a book up and you'll kind
+of be able to read it and say oh, this is using the highfalutin hoity-toity
+language, which is the more math-oriented. So in the more math-oriented, we use
+the words relation, tuple, and attribute. That's kind of the fancy
+way of speaking about it. But sort of we programmers
+who just do our thing, we would call it a table,
+a row, and a column. Now, table and row and column is kind
+of the wrong way to think about it if you're trying to understand the true
+underlying amazing mathematics. The underlying mathematics, don't worry
+about the underlying mathematics. Just be aware as you're reading, don't be surprised when people lapse
+into this more fancy nomenclature. So the idea is that you model data at
+a connection point rather than like, here's data and we're starting here and
+we're reading through it. The idea is if you model everything
+as a connection, like who a person is. A person is a connection between
+this, that, and the other thing. And so this notion of modeling
+stuff at a connection is the underlying math that
+makes databases fast, but when we programmers think about it we kind
+of think about it as rows and columns. And so here's just a screenshot
+of a spreadsheet that I made. Along the bottom you see the names
+of the various subsheets, tracks, albums, artists,
+genres, and titles. And those are like the database tables. And then each table, if you select it,
+has a row and a column. So it's got these columns. This has three columns in it and
+it has a bunch of rows. The other thing,
+when you're doing stuff in a spreadsheet. You just kind of come up with a
+data model, a schema, a strategy so that you know that the first column is
+always the title, the second column is the rating, because if you didn't
+label it, it would make no sense. So we often do something where
+the first row of a spreadsheet is kind of metadata about the columns,
+right? Now, the spreadsheet doesn't
+exactly know that you're doing it. Even though some of the things you do,
+like sometimes it sorts and says, oh, check this tickbox to say the first
+row is title, so don't sort it. So when you sort stuff you only sort
+like the bottom part of it, right? And so it sort of knows it's the title. But in a database this becomes
+what we call the schema. All this, all these titles and we have rules like these have
+to be integer numbers, this has to be an integer number, this has to
+be string no more than 128 characters. So we make strong contracts about the
+content that sort of at some level feels very similar to what we´re doing
+when we´re writing these titles. But in reality, as you'll see, it is far
+more complex and far more intricate. Now, if you've ever tried to do something
+like we're going to do with this database, and that is categorize your music
+collection, you find that a spreadsheet is a really hard way to categorize
+your music collection because of so much repeated data. And we'll figure that out in databases. So the idea that they came
+up with in the 60s and the 70s is there was a way
+to represent data on a disk. And it could be randomly accessed and there was pointers that pointed
+to something else, and whatever. And in the early days they figured out
+how to technically solve fast access to lots of data by hopping in various
+ways, indexing, doing clever things. And the early ways that we programmed these
+databases is we sort of revealed to us application programmers, the low-level
+capabilities of read this thing, then jump to this other thing,
+then read this other thing, then jump to the other thing,
+read this thing, jump to this thing. Which made our lives really difficult. And so we had to write really
+sophisticated programs, but when we did they could
+function very rapidly. So what happened over time is instead of
+our code talking directly to the files or the databases, instead, a layer started to build up that we call the database application,
+database. I'm not doing a very good job drawing,
+right? So here's our database, and
+it has lots of complexity in it. And originally, we sort of just talked
+straight to that complexity, but after a while we would have
+a database application. And then our application, our code, would
+talk to the database application, and the database would know
+all the magic stuff. And it was what we call in
+computer science an abstraction, which means that our job, this is us, and our job was easier because
+the complexity could all be hidden here. And so the question becomes, then how do we talk to this really powerful
+piece of software that we call a database? What is living here? What is the way we communicate? Sometimes we would call this an API,
+application program interface. So this is our application. This is actually another application,
+the database itself is an application. And so we have to have an interface so that our application can talk
+to the other application. And just like in the previous
+lecture this is like a service. It's taking care of it. And ultimately,
+let me change the color here. It's getting kind of messy, we can sort
+of think of this thing right here, both the data and the software that
+understands the shape of the data, as just a service in
+a service oriented architecture. So once again, what we have to
+do is define, to use the service oriented architecture, the cut point. What is the cut point between our
+application and this magic stuff? And this is Oracle. Right? So it's lots and lots of money. And it's amazing, it's just really
+good software. Right? Oracle is really good. Microsoft is really good. So what happened was, we decided to
+create a standard at this point. The industry did. The folks got together with the National
+Institute of Standards and Technology, NIST, and they agreed on a language that was the API between
+an application and a database system. And the name of that thing
+they came up with was SQL, or the Structured Query Language, okay? And so that means that, wow,
+I've made such a mess of this, I have to start over again and
+draw another picture. Right? So that means that over
+here you could have Oracle. Over here you could have Microsoft. And here you could have APP1. And here you could have APP2. And APP1 could talk to Oracle,
+or it could talk to MySQL. Or APP2 could talk to Oracle,
+or APP2 could talk to MySQL. And so because they use the same
+communication between Oracle and MySQL, that means that you can
+write an app that's portable between different databases. And, it turns out that this
+SQL is a beautiful language, it's just a gorgeous language. The reason I don't teach SQL as the very
+first programming language is you would be ruined. If you learned SQL you would never
+want to program in any other language. I think it's the most beautiful
+language that I've ever encountered. It's beautiful because of its
+simplicity and its expressiveness, and its power, but then it's a very
+beautiful and elegant language. The problem with SQL is,
+it depends on the data being pretty. It's a great way to write code
+about really gorgeous data. So part of what we're going to do is learn
+how to make the data look really good, and then write really cool stuff. Python, on the other hand,
+is a little rough around the edges. But it also has no problem dealing
+with unstructured data, or data that is imperfect, or whatever. And you can just keep writing more Python. And eventually you're like oh man I
+thought it wasn't as complex at this. I got to add a little bit
+of if statement here and add another if statement there and
+do another thing. So Python handles unstructured rough
+data much better than databases and that's why Python plus SQL
+is such a powerful thing. Python cleans up the data. SQL is a great way to store and
+retrieve data. So what SQL does is it
+has four basic functions. We call it CRUD. Create, read, update, and delete. Update is missing here. CRUD. So that's a database term. It's CRUD.
+Create, read, update, and delete. So up next, we're going to talk about how you
+as the application developer are going to interact, both in large projects and
+in small projects. Small projects are going to be the more
+typical thing that we use in this class. So that's what we're going
+to talk about in a bit, and how you use software to
+interact with databases.
