@@ -104,4 +104,42 @@ insert into Track (title,rating,len,count,album_id,genre_id) values ("we are leg
 -- and not string
 -- remember no dupicate string
 
+
+
+
+-- now the data is pices in different table with numbers
+-- now we use the join query 
+-- then grather the full data
+
+-- suppose we want two data from two different table
+
+-- select the album title from the album  and  artist name from the Artist
+-- but do it where the album_artist id is the same as artist id 
+SELECT Album.title,Artist.name From Album join Artist WHERE Album.artist_id = Artist.id;
+
+-- make a another query to make it clear
+
+
+-- find all the track and their related album
+
+SELECT Track.title,Album.title From Track join Album Where Track.album_id = Album.id;
+
+
+-- another
+select Album.title,Album.artist_id,Artist.id,Artist.name from Album join Artist where Album.artist_id = Artist.id;
 SELECT * FROM Track;
+
+
+-- so now we eant the tracks with the corresponding Genre
+
+
+SELECT Track.title,Genre.name From Track join Genre WHERE Track.genre_id = Genre.id;
+
+
+-- now the complex
+
+select Track.title,Artist.name,Album.title,Genre.name From Track join Artist join Album join Genre WHERE Track.genre_id = Genre.id and Track.album_id = Album.id and Album.artist_id = Artist.id;
+
+-- to preetyfy the data
+.mode column
+.header on
